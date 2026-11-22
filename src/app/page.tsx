@@ -8,9 +8,7 @@ import { HeroSection } from "@/components/public/HeroSection";
 import { KineticTicker } from "@/components/public/KineticTicker";
 import { AboutSection } from "@/components/public/AboutSection";
 import { ServicesSection } from "@/components/public/ServicesSection";
-import { PhilosophyBreak } from "@/components/public/PhilosophyBreak";
 import { ResultsSection } from "@/components/public/ResultsSection";
-import { ProcessSection } from "@/components/public/ProcessSection";
 import { PricingSection } from "@/components/public/PricingSection";
 import { FaqSection } from "@/components/public/FaqSection";
 import { ContactSection } from "@/components/public/ContactSection";
@@ -117,7 +115,7 @@ export default function HomePage() {
           />
         )}
 
-        {/* 7. Programs Interactive Workbench (Dark Section) */}
+        {/* 7. Programs (6 Cards with Visuals) */}
         {isSectionEnabled("services") && (
           <ServicesSection
             programs={data.programs}
@@ -125,21 +123,13 @@ export default function HomePage() {
           />
         )}
 
-        {/* 8. Philosophy Quote Break */}
-        <PhilosophyBreak />
-
-        {/* 9. Results & Achievements Section (Cream Section) */}
+        {/* 8. Results & Client Transformations */}
         {isSectionEnabled("results") && (
           <ResultsSection
             achievements={data.achievements}
             transformations={data.transformations}
             onOpenInquiry={() => openInquiryModal()}
           />
-        )}
-
-        {/* 10. Process / The Approach Section (Dark Section) */}
-        {isSectionEnabled("process") && (
-          <ProcessSection onOpenInquiry={() => openInquiryModal()} />
         )}
 
         {/* 11. Monthly Pricing Plans (Dark Section) */}

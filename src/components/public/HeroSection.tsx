@@ -44,7 +44,7 @@ export function HeroSection({
   const posterSrc =
     data.poster_url ||
     data.fallback_image_url ||
-    "/assets/hero-reference-placeholder.webp";
+    "/images/hero-amber-coach.jpg";
 
   return (
     <section className="hero" id="home" aria-label="Shaik Mansoor fitness coaching">
@@ -84,14 +84,14 @@ export function HeroSection({
 
       {/* Hero Topline */}
       <div className="hero-topline mono">
-        <span className="status-dot" /> BAPATLA, INDIA{" "}
+        <span className="status-dot" style={{ backgroundColor: "#FF9F00", boxShadow: "0 0 10px #FF9F00" }} /> BAPATLA, INDIA{" "}
         <span className="topline-divider" /> ONLINE & IN-PERSON COACHING
       </div>
 
       {/* Main Copy */}
       <div className="hero-copy">
-        <div className="eyebrow reveal is-visible">
-          <span className="eyebrow-bar" /> PERSONAL FITNESS COACHING BY SHAIK MANSOOR
+        <div className="eyebrow reveal is-visible flex items-center gap-2">
+          <span className="eyebrow-bar" style={{ backgroundColor: "#FF9F00" }} /> PERSONAL FITNESS COACHING BY SHAIK MANSOOR
         </div>
         <h1 className="hero-title">
           <span className="line-mask">
@@ -99,7 +99,14 @@ export function HeroSection({
           </span>
           <span className="line-mask">
             <span className="line-inner">
-              GET <em>STRONGER.</em>
+              GET <em style={{
+                background: "linear-gradient(90deg, #FFB300 0%, #FF5722 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                WebkitTextStroke: "0px",
+                fontStyle: "normal",
+                opacity: 1
+              }}>STRONGER.</em>
             </span>
           </span>
         </h1>
@@ -112,15 +119,29 @@ export function HeroSection({
             <button
               type="button"
               className="btn btn-light btn-xl"
+              style={{
+                background: "linear-gradient(135deg, #FFB300 0%, #FF5722 100%)",
+                boxShadow: "0 4px 25px rgba(255, 140, 0, 0.45)",
+                borderRadius: "9999px",
+                color: "#000",
+                fontWeight: 800,
+                padding: "0 28px",
+              }}
               onClick={() => onOpenInquiry()}
             >
-              START YOUR JOURNEY{" "}
-              <span className="circle-arrow" aria-hidden="true">
-                ↗
-              </span>
+              START YOUR JOURNEY <span style={{ fontSize: "16px", fontWeight: "900", marginLeft: "4px" }}>+</span>
             </button>
-            <a href="#programs" className="btn btn-outline btn-xl">
-              EXPLORE PROGRAMS <span aria-hidden="true">↘</span>
+            <a
+              href="#programs"
+              className="btn btn-outline btn-xl"
+              style={{
+                border: "1px solid rgba(255, 150, 0, 0.4)",
+                background: "rgba(0,0,0,0.35)",
+                borderRadius: "9999px",
+                padding: "0 24px",
+              }}
+            >
+              EXPLORE PROGRAMS <span style={{ color: "#FF9F00", fontWeight: "bold", marginLeft: "4px" }}>+</span>
             </a>
           </div>
         </div>
@@ -128,18 +149,18 @@ export function HeroSection({
 
       {/* Right Standard Note (Desktop only) */}
       <div className="hero-right-note reveal is-visible">
-        <span className="mono small-index">01 / THE STANDARD</span>
+        <span className="mono small-index" style={{ color: "#FF9F00" }}>01 / THE STANDARD</span>
         <p>No shortcuts. No guesswork. Just focused training built around your goals.</p>
       </div>
 
       {/* Bottom Cue & Highlights */}
       <div className="hero-bottom">
         <div className="scroll-cue">
-          <span className="scroll-cue-line" />
+          <span className="scroll-cue-line" style={{ background: "#FF9F00" }} />
           <span>SCROLL TO DISCOVER</span>
         </div>
         <div className="hero-counter mono">
-          4 YEARS IN FITNESS <span className="hero-counter-spark">✳</span> 02 COMPETITION PODIUMS
+          4 YEARS IN FITNESS <span className="hero-counter-spark" style={{ color: "#FF9F00" }}>✳</span> 02 COMPETITION PODIUMS
         </div>
         <button
           className="hero-image-note mono"

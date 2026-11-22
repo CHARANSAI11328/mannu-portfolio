@@ -8,198 +8,165 @@ interface ServicesSectionProps {
   onSelectProgram: (programTitle: string) => void;
 }
 
-interface PrototypeProgramItem {
-  number: string;
+interface ProgramCardItem {
+  id: string;
   name: string;
-  type: string;
-  title: string;
+  icon: string;
   description: string;
-  goal: string;
+  image: string;
+  isFeatured?: boolean;
 }
 
-const DEFAULT_PROGRAMS: PrototypeProgramItem[] = [
+const PROGRAM_ITEMS: ProgramCardItem[] = [
   {
-    number: "01",
+    id: "muscle-building",
     name: "MUSCLE BUILDING",
-    type: "BUILD SIZE WITH INTENT",
-    title: "OWN THE<br/>NEXT REP.",
+    icon: "💪",
     description:
-      "A purposeful path to adding muscle through structured training, exercise technique, and consistent progression.",
-    goal: "Muscle building",
+      "Build lean, quality muscle with a structured, progressive plan tailored to your body and goals.",
+    image: "/images/program-muscle.jpg",
   },
   {
-    number: "02",
+    id: "fat-loss",
     name: "FAT LOSS",
-    type: "MOVE WITH CONFIDENCE",
-    title: "BUILD A<br/>LEANER YOU.",
+    icon: "🔥",
     description:
-      "Create a sustainable approach to fat loss with training guidance that fits your schedule and starting point.",
-    goal: "Fat loss",
+      "Lose fat, improve body composition, and feel lighter, stronger, and more confident.",
+    image: "/images/program-fatloss.jpg",
+    isFeatured: true,
   },
   {
-    number: "03",
+    id: "strength-training",
     name: "STRENGTH TRAINING",
-    type: "POWER WITH PURPOSE",
-    title: "GET<br/>STRONGER.",
+    icon: "🏋️",
     description:
-      "Practice the fundamental lifts, improve movement quality, and build strength over time.",
-    goal: "Strength training",
+      "Build real-world strength, power, and resilience with proven, structured training.",
+    image: "/images/program-strength.jpg",
   },
   {
-    number: "04",
-    name: "BODYBUILDING PREP",
-    type: "PREPARE FOR THE STAGE",
-    title: "PRECISION.<br/>DISCIPLINE.",
+    id: "bodybuilding-prep",
+    name: "BODYBUILDING PREPARATION",
+    icon: "🏆",
     description:
-      "Discuss structured bodybuilding preparation and competition-focused goals with a trainer who has stage experience.",
-    goal: "Bodybuilding prep",
+      "Competition-focused training, conditioning, and guidance to help you show up at your best.",
+    image: "/images/program-bodybuilding.jpg",
   },
   {
-    number: "05",
+    id: "beginner-fitness",
     name: "BEGINNER FITNESS",
-    type: "THE FIRST STEP MATTERS",
-    title: "START<br/>STRONG.",
+    icon: "🌱",
     description:
-      "Learn foundational movement patterns and build the confidence to make training part of your routine.",
-    goal: "Beginner fitness",
+      "A clear, supportive, and effective start to your fitness journey — no experience needed.",
+    image: "/images/program-beginner.jpg",
   },
   {
-    number: "06",
-    name: "CONDITIONING",
-    type: "BETTER EVERY SESSION",
-    title: "MOVE.<br/>ENDURE.",
+    id: "general-fitness",
+    name: "GENERAL FITNESS",
+    icon: "⚡",
     description:
-      "Develop general fitness and work capacity through a thoughtfully balanced training approach.",
-    goal: "Conditioning",
+      "Build a stronger, healthier, and more energetic version of yourself with a balanced, sustainable plan.",
+    image: "/images/program-general.jpg",
   },
 ];
 
 export function ServicesSection({ onSelectProgram }: ServicesSectionProps) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isSwitching, setIsSwitching] = useState(false);
-
-  const activeProg = DEFAULT_PROGRAMS[selectedIndex];
-
-  const handleSelect = (idx: number) => {
-    if (idx === selectedIndex) return;
-    setIsSwitching(true);
-    setSelectedIndex(idx);
-    setTimeout(() => setIsSwitching(false), 250);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, idx: number) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      const next = (idx + 1) % DEFAULT_PROGRAMS.length;
-      handleSelect(next);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      const prev = (idx + DEFAULT_PROGRAMS.length - 1) % DEFAULT_PROGRAMS.length;
-      handleSelect(prev);
-    }
-  };
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <section className="programs dark-section section-pad" id="programs">
-      <div className="proto-container">
-        {/* Section Topline */}
-        <div className="section-topline section-topline-dark reveal is-visible">
-          <span className="section-index mono">02 / WHAT WE BUILD</span>
-          <span className="section-line" />
-          <span className="mono section-context">CHOOSE YOUR DIRECTION</span>
-        </div>
+    <section className="section-pad relative overflow-hidden" id="programs" style={{ backgroundColor: "#09090b" }}>
+      {/* Background radial glow */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] pointer-events-none rounded-full blur-[160px] -z-0 opacity-15"
+        style={{ background: "radial-gradient(circle, #FF9F00 0%, transparent 70%)" }}
+      />
 
-        {/* Section Heading */}
-        <div className="section-head reveal is-visible">
+      <div className="proto-container relative z-10">
+        {/* Section Topline */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
           <div>
-            <p className="small-kicker">TRAIN FOR THE PERSON YOU WANT TO BECOME.</p>
-            <h2 className="display-big">
-              CHOOSE
-              <br />
-              <em>YOUR EDGE.</em>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-5 h-[2px] bg-[#FF9F00]" />
+              <span className="mono text-xs tracking-wider text-[#94a3b8] uppercase font-bold">
+                SERVICES / PROGRAMS
+              </span>
+            </div>
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-white uppercase">
+              TRAINING{" "}
+              <span className="bg-gradient-to-r from-[#FFB300] via-[#FF9F00] to-[#FF5722] bg-clip-text text-transparent">
+                PROGRAMS
+              </span>
             </h2>
           </div>
-          <p className="section-head-aside">
-            A different goal deserves a different approach. Choose your focus to explore how
-            we train.
+
+          <p className="text-xs sm:text-sm text-slate-400 max-w-md leading-relaxed">
+            Targeted training programs built for real results. Whether you&apos;re building muscle,
+            losing fat, getting stronger, or starting fresh — there&apos;s a program for you.
           </p>
         </div>
 
-        {/* Interactive Workbench */}
-        <div className="program-workbench">
-          {/* Left: Tab list */}
-          <div
-            className="program-list"
-            role="tablist"
-            aria-label="Training programs"
-            id="programList"
-          >
-            {DEFAULT_PROGRAMS.map((prog, idx) => {
-              const isSelected = idx === selectedIndex;
-              return (
-                <button
-                  key={prog.number}
-                  role="tab"
-                  className={`program-row ${isSelected ? "is-selected" : ""}`}
-                  type="button"
-                  aria-selected={isSelected}
-                  onClick={() => handleSelect(idx)}
-                  onKeyDown={(e) => handleKeyDown(e, idx)}
-                >
-                  <span className="program-number mono">{prog.number}</span>
-                  <span className="program-name">{prog.name}</span>
-                  <span className="program-arrow">↗</span>
-                </button>
-              );
-            })}
-          </div>
+        {/* 6 Program Cards Grid (3x2) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {PROGRAM_ITEMS.map((item) => {
+            const isHighlighted = item.isFeatured || hoveredId === item.id;
 
-          {/* Right: Stage with 3D rotating CSS weight plate */}
-          <div
-            className={`program-stage ${isSwitching ? "stage-switch" : ""}`}
-            id="programStage"
-            role="tabpanel"
-            aria-live="polite"
-          >
-            <div className="stage-top">
-              <span className="mono stage-tag">
-                PROGRAM SPOTLIGHT / <span>{activeProg.number}</span>
-              </span>
-              <span className="stage-plus">+</span>
-            </div>
+            return (
+              <div
+                key={item.id}
+                onMouseEnter={() => setHoveredId(item.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                className={`relative rounded-2xl bg-[#121215] p-6 flex flex-col justify-between overflow-hidden transition-all duration-300 group cursor-pointer ${
+                  isHighlighted
+                    ? "border border-[#FF9800] shadow-[0_0_30px_rgba(255,140,0,0.35)]"
+                    : "border border-white/10 hover:border-[#FF9F00]/50"
+                }`}
+                onClick={() => onSelectProgram(item.name)}
+              >
+                {/* Background visual image right side */}
+                <div className="absolute right-0 top-0 bottom-0 w-2/5 overflow-hidden pointer-events-none opacity-85 group-hover:opacity-100 transition-opacity">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#121215] via-[#121215]/60 to-transparent" />
+                </div>
 
-            {/* 3D Barbell Weight Plate Graphic */}
-            <div
-              className="plate-graphic"
-              aria-hidden="true"
-              style={{
-                transform: `translateX(-50%) rotate(${selectedIndex * 36}deg)`,
-              }}
-            >
-              <div className="plate-rim plate-rim-outer">
-                <div className="plate-rim plate-rim-mid">
-                  <div className="plate-rim plate-rim-inner">
-                    <span className="plate-center">M</span>
-                  </div>
+                {/* Card Content (Left 65%) */}
+                <div className="relative z-10 max-w-[65%] mb-8">
+                  <div className="text-2xl mb-3 text-[#FF9F00]">{item.icon}</div>
+                  <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight mb-2">
+                    {item.name}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+
+                {/* Card Action Button */}
+                <div className="relative z-10">
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all"
+                    style={{
+                      background: isHighlighted
+                        ? "linear-gradient(135deg, #FFB300 0%, #FF5722 100%)"
+                        : "transparent",
+                      color: isHighlighted ? "#000" : "#fff",
+                      border: isHighlighted
+                        ? "none"
+                        : "1px solid rgba(255, 150, 0, 0.4)",
+                      boxShadow: isHighlighted
+                        ? "0 4px 15px rgba(255, 140, 0, 0.4)"
+                        : "none",
+                    }}
+                  >
+                    <span>EXPLORE PROGRAM</span>
+                    <span className={isHighlighted ? "text-black font-extrabold" : "text-[#FF9F00]"}>+</span>
+                  </button>
                 </div>
               </div>
-              <div className="plate-line" />
-            </div>
-
-            {/* Stage bottom copy and CTA */}
-            <div className="stage-bottom">
-              <span className="stage-type mono">{activeProg.type}</span>
-              <h3 dangerouslySetInnerHTML={{ __html: activeProg.title }} />
-              <p>{activeProg.description}</p>
-              <button
-                className="stage-cta"
-                type="button"
-                onClick={() => onSelectProgram(activeProg.goal)}
-              >
-                EXPLORE THIS COACHING <span>↗</span>
-              </button>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,14 +1,17 @@
 @layer base {
   :root {
-    --ink: #080909;
-    --coal: #101211;
-    --char: #171a18;
-    --paper: #eeeee8;
-    --paper2: #e5e5dc;
-    --white: #f6f6f0;
-    --muted: #989b96;
-    --line: #383b39;
-    --signal: #d7f16a;
+    --ink: #09090b;
+    --coal: #0d0d10;
+    --char: #131316;
+    --paper: #131316;
+    --paper2: #1a1a20;
+    --white: #f8fafc;
+    --muted: #94a3b8;
+    --line: rgba(255, 255, 255, 0.08);
+    --signal: #FF9F00;
+    --signal-orange: #FF5722;
+    --signal-yellow: #FFB300;
+    --amber-glow: rgba(255, 159, 0, 0.4);
     --margin: clamp(20px, 4.2vw, 82px);
     --display: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
     --body: Inter, "Helvetica Neue", Arial, sans-serif;
@@ -16,13 +19,13 @@
     --hero-darkness: 0.42;
 
     /* Theme tokens mapped */
-    --bg-black: #080909;
-    --bg-section: #101211;
-    --bg-card: #171a18;
-    --text-primary: #f6f6f0;
-    --text-muted: #989b96;
-    --border-dark: #383b39;
-    --border-subtle: #252825;
+    --bg-black: #09090b;
+    --bg-section: #0d0d10;
+    --bg-card: #131316;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-dark: rgba(255, 255, 255, 0.08);
+    --border-subtle: rgba(255, 255, 255, 0.05);
   }
 
   html {
@@ -135,8 +138,8 @@
 }
 
 .cream-section {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg-section);
+  color: var(--white);
 }
 
 .dark-section {
@@ -144,12 +147,35 @@
   color: var(--white);
 }
 
+/* ─── AMBER THEME UTILITIES ─── */
+.text-gradient-amber {
+  background: linear-gradient(90deg, #FFB300 0%, #FF5722 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-card-amber {
+  border: 1.5px solid #FF9800 !important;
+  box-shadow: 0 0 35px rgba(255, 140, 0, 0.35) !important;
+}
+
+.pill-tag-amber {
+  background: linear-gradient(135deg, #FFB300 0%, #FF5722 100%);
+  color: #000000;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
 /* ─── BUTTONS ─── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 12px;
   border: 1px solid transparent;
   border-radius: 100px;
   font-size: 11px;
@@ -158,7 +184,7 @@
   white-space: nowrap;
   min-height: 48px;
   padding: 0 24px;
-  transition: background 0.25s, color 0.25s, border 0.25s, transform 0.25s;
+  transition: background 0.25s, color 0.25s, border 0.25s, transform 0.25s, box-shadow 0.25s;
   line-height: 1.1;
   text-decoration: none;
   cursor: pointer;
@@ -169,42 +195,48 @@
 }
 
 .btn-light {
-  color: #0b0c0b;
-  background: var(--white);
+  color: #000000;
+  background: linear-gradient(135deg, #FFB300 0%, #FF5722 100%);
+  box-shadow: 0 4px 20px rgba(255, 140, 0, 0.4);
 }
 
 .btn-light:hover {
-  background: var(--signal);
+  background: linear-gradient(135deg, #FFA000 0%, #F4511E 100%);
+  box-shadow: 0 6px 28px rgba(255, 140, 0, 0.6);
 }
 
 .btn-outline {
   color: var(--white);
-  background: rgba(0, 0, 0, 0.15);
-  border-color: #616661;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 150, 0, 0.4);
 }
 
 .btn-outline:hover {
-  border-color: var(--white);
-  background: #202420;
+  border-color: #FF9F00;
+  background: rgba(255, 150, 0, 0.12);
+  color: #FFB300;
 }
 
 .btn-dark {
-  background: var(--ink);
+  background: #18181c;
   color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .btn-dark:hover {
-  background: #363b35;
+  background: #222228;
+  border-color: rgba(255, 150, 0, 0.4);
 }
 
 .btn-outline-dark {
   background: transparent;
-  color: var(--ink);
-  border-color: #858880;
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .btn-outline-dark:hover {
-  background: #dde0d5;
+  border-color: #FF9800;
+  background: rgba(255, 150, 0, 0.08);
 }
 
 .btn-xl {
@@ -1140,7 +1172,9 @@
 
 /* ─── PHILOSOPHY BREAK ─── */
 .quote-break {
-  background: #181b18;
+  background: #09090b;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   min-height: 560px;
   display: flex;
   align-items: center;
@@ -1842,8 +1876,10 @@
 .sheet-dialog {
   width: min(980px, calc(100vw - 28px));
   max-height: min(92dvh, 840px);
-  background: var(--paper);
-  color: var(--ink);
+  background: #121215;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   box-shadow: 0 40px 140px #000000ee;
   overflow: auto;
   position: relative;
@@ -1856,7 +1892,8 @@
 }
 
 .dialog-side {
-  background: #111712;
+  background: #0d0d10;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   color: #ffffff;
   padding: 32px;
   display: flex;
@@ -1871,11 +1908,11 @@
   position: absolute;
   width: 430px;
   height: 430px;
-  border: 1px solid #8ca18033;
+  border: 1px solid rgba(255, 159, 0, 0.15);
   border-radius: 50%;
   right: -240px;
   top: 18%;
-  box-shadow: 0 0 0 65px #ffffff05, 0 0 0 145px #ffffff03;
+  box-shadow: 0 0 0 65px rgba(255, 159, 0, 0.03), 0 0 0 145px rgba(255, 159, 0, 0.01);
 }
 
 .dialog-side-top,
@@ -1913,6 +1950,8 @@
 
 .dialog-main {
   padding: 32px 38px 38px;
+  background: #141418;
+  color: #ffffff;
 }
 
 .dialog-header {
@@ -1922,35 +1961,39 @@
 }
 
 .dialog-header .mono {
-  color: #677165;
+  color: #94a3b8;
 }
 
 .dialog-close {
   display: grid;
   place-items: center;
-  border: 1px solid #ccd0c6;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: transparent;
+  color: #ffffff;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   font-size: 24px;
   line-height: 1;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .dialog-close:hover {
-  background: #d5dacd;
+  background: rgba(255, 150, 0, 0.15);
+  border-color: #FF9F00;
 }
 
 .dialog-main h3 {
   font-size: 32px;
   letter-spacing: -0.065em;
   margin: 32px 0 10px;
+  color: #ffffff;
 }
 
 .dialog-subtitle {
   font-size: 13px;
-  color: #637060;
+  color: #94a3b8;
   line-height: 1.5;
   max-width: 440px;
 }
@@ -1969,24 +2012,26 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  color: #cbd5e1;
 }
 
 .dialog-main input:not([type="radio"]),
 .dialog-main select,
 .preview-dialog input:not([type="file"]):not([type="range"]) {
-  background: #f9faf5;
-  border: 1px solid #c5ccc0;
+  background: #1c1c24;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   min-height: 46px;
-  border-radius: 0;
+  border-radius: 8px;
   padding: 0 14px;
-  color: #161a15;
+  color: #ffffff;
   font-size: 13px;
   width: 100%;
 }
 
 .dialog-main input:focus,
 .dialog-main select:focus {
-  border-color: #4c6452;
+  border-color: #FF9F00;
+  outline: none;
 }
 
 .form-cols {

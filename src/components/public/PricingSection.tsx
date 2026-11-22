@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { PricingPlan } from "@/types";
 
 interface PricingSectionProps {
@@ -9,157 +9,194 @@ interface PricingSectionProps {
 }
 
 export function PricingSection({ plans, onSelectPlan }: PricingSectionProps) {
-  // 3D tilt interaction matching prototype
-  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    const card = e.currentTarget;
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    card.style.transform = `perspective(800px) rotateX(${-y * 2.5}deg) rotateY(${x * 2.5}deg) translateY(-7px)`;
-  };
-
-  const handlePointerLeave = (e: React.PointerEvent<HTMLElement>) => {
-    e.currentTarget.style.transform = "";
-  };
-
-  // Default plans if none from CMS
   const foundationPrice = plans?.find((p) => p.name.includes("Foundation"))?.price_inr || 999;
   const transformationPrice =
     plans?.find((p) => p.name.includes("Transformation"))?.price_inr || 1999;
   const elitePrice = plans?.find((p) => p.name.includes("Elite"))?.price_inr || 3999;
 
   return (
-    <section className="pricing dark-section section-pad" id="pricing">
-      <div className="proto-container">
-        {/* Section Topline */}
-        <div className="section-topline section-topline-dark reveal is-visible">
-          <span className="section-index mono">05 / THE INVESTMENT</span>
-          <span className="section-line" />
-          <span className="mono section-context">MONTHLY TRAINING</span>
-        </div>
+    <section className="section-pad relative overflow-hidden" id="pricing" style={{ backgroundColor: "#09090b" }}>
+      {/* Background radial glow */}
+      <div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none rounded-full blur-[160px] -z-0 opacity-20"
+        style={{ background: "radial-gradient(circle, #FF9F00 0%, transparent 70%)" }}
+      />
 
-        {/* Section Heading */}
-        <div className="pricing-head reveal is-visible">
-          <div>
-            <p className="small-kicker">NO COMPLICATED PACKAGES.</p>
-            <h2 className="display-big">
-              PUT IN THE
-              <br />
-              <em>WORK.</em>
-            </h2>
+      <div className="proto-container relative z-10">
+        {/* Section Topline */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <span className="w-5 h-[2px] bg-[#FF9F00]" />
+            <span className="mono text-xs tracking-wider text-[#94a3b8] uppercase font-bold">
+              PRICING PLANS
+            </span>
+            <span className="w-5 h-[2px] bg-[#FF9F00]" />
           </div>
-          <p>
-            Three ways to begin. Every plan starts with a conversation, because your training
-            schedule should fit your actual life.
+
+          <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-white uppercase mb-3">
+            CHOOSE YOUR{" "}
+            <span className="bg-gradient-to-r from-[#FFB300] via-[#FF9F00] to-[#FF5722] bg-clip-text text-transparent">
+              TRAINING PLAN.
+            </span>
+          </h2>
+
+          <p className="text-xs sm:text-sm text-slate-400">
+            Personal coaching, real structure, and results that last.
           </p>
         </div>
 
         {/* 3 Pricing Cards Grid */}
-        <div className="pricing-grid">
-          {/* Level 01: Foundation */}
-          <article
-            className="price-card reveal is-visible"
-            onPointerMove={handlePointerMove}
-            onPointerLeave={handlePointerLeave}
-          >
-            <div className="price-top">
-              <span className="mono">LEVEL 01 / ENTRY</span>
-              <span className="price-symbol">✳</span>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-12">
+          {/* Card 1: Foundation */}
+          <div className="rounded-2xl bg-[#121215] border border-white/10 p-8 flex flex-col justify-between hover:border-[#FF9F00]/40 transition-all duration-300">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xl mb-6">
+                🏋️
+              </div>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-1">
+                FOUNDATION
+              </h3>
+              <div className="mono text-xs text-slate-400 uppercase tracking-wider mb-6">
+                BUILD THE RIGHT BASE
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-4xl font-black text-white">
+                  ₹{foundationPrice.toLocaleString("en-IN")}
+                </span>
+                <span className="mono text-xs text-slate-400 uppercase">/ month</span>
+              </div>
+
+              <ul className="space-y-3.5 mb-8">
+                {[
+                  "Personalized training plan",
+                  "Basic nutrition guidance",
+                  "Progress tracking & weekly check-in",
+                  "Ongoing trainer support",
+                ].map((feat, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-slate-300">
+                    <span className="text-[#FF9F00] font-bold">✓</span>
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <h3>FOUNDATION</h3>
-            <p>Build your routine. Learn the fundamentals. Get moving with direction.</p>
-            <div className="price-amount">
-              ₹{foundationPrice.toLocaleString("en-IN")}{" "}
-              <span>/ MONTH</span>
-            </div>
-            <div className="price-rule" />
-            <ul>
-              <li>Basic workout guidance</li>
-              <li>Beginner exercise routines</li>
-              <li>Fundamental form guidance</li>
-              <li>General fitness support</li>
-            </ul>
+
             <button
-              className="price-button"
               type="button"
+              className="w-full py-3.5 px-6 rounded-full border border-white/15 hover:border-[#FF9F00] text-white hover:text-[#FF9F00] font-bold text-xs uppercase tracking-wider transition-all"
               onClick={() => onSelectPlan("Foundation", foundationPrice)}
             >
-              CHOOSE FOUNDATION <span>↗</span>
+              GET FOUNDATION <span className="ml-1 text-base leading-none">+</span>
             </button>
-          </article>
+          </div>
 
-          {/* Level 02: Transformation (Featured) */}
-          <article
-            className="price-card featured reveal is-visible"
-            onPointerMove={handlePointerMove}
-            onPointerLeave={handlePointerLeave}
-          >
-            <div className="price-top">
-              <span className="mono">LEVEL 02 / MOST POPULAR</span>
-              <span className="featured-tag mono">FOCUSED PROGRESS</span>
+          {/* Card 2: Transformation (Featured / Most Popular) */}
+          <div className="relative rounded-2xl bg-[#141418] border-2 border-[#FF9800] shadow-[0_0_40px_rgba(255,140,0,0.35)] p-8 flex flex-col justify-between transform lg:-translate-y-2">
+            {/* Most Popular Floating Pill */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+              <span className="bg-gradient-to-r from-[#FFB300] to-[#FF5722] text-black font-black text-[10px] tracking-wider uppercase px-4 py-1 rounded-full shadow-md">
+                MOST POPULAR
+              </span>
             </div>
-            <h3>TRANSFORMATION</h3>
-            <p>Training with intent, built around the change you&apos;re working toward.</p>
-            <div className="price-amount">
-              ₹{transformationPrice.toLocaleString("en-IN")}{" "}
-              <span>/ MONTH</span>
+
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[#FF9F00]/10 border border-[#FF9F00]/40 flex items-center justify-center text-xl mb-6">
+                ⚡
+              </div>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-1">
+                TRANSFORMATION
+              </h3>
+              <div className="mono text-xs text-[#FF9F00] uppercase tracking-wider mb-6">
+                REAL CHANGE. VISIBLE RESULTS.
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-4xl font-black bg-gradient-to-r from-[#FFB300] to-[#FF5722] bg-clip-text text-transparent">
+                  ₹{transformationPrice.toLocaleString("en-IN")}
+                </span>
+                <span className="mono text-xs text-slate-400 uppercase">/ month</span>
+              </div>
+
+              <ul className="space-y-3.5 mb-8">
+                {[
+                  "Customized training & workout progression",
+                  "Detailed nutrition & habit plan",
+                  "Weekly review & performance adjustments",
+                  "Direct trainer support (WhatsApp/Call)",
+                  "Goal-focused, results-driven coaching",
+                ].map((feat, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
+                    <span className="text-[#FF9F00] font-bold">✓</span>
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="price-rule" />
-            <ul>
-              <li>Personalized workout structure</li>
-              <li>Muscle gain or fat loss focus</li>
-              <li>Exercise form reviews</li>
-              <li>Progress discussions</li>
-              <li>Individual fitness guidance</li>
-            </ul>
+
             <button
-              className="price-button"
               type="button"
+              className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#FFB300] to-[#FF5722] hover:from-[#FFA000] hover:to-[#F4511E] text-black font-black text-xs uppercase tracking-wider shadow-[0_4px_20px_rgba(255,140,0,0.5)] transition-all"
               onClick={() => onSelectPlan("Transformation", transformationPrice)}
             >
-              CHOOSE TRANSFORMATION <span>↗</span>
+              GET TRANSFORMATION <span className="ml-1 text-base leading-none font-black">+</span>
             </button>
-          </article>
+          </div>
 
-          {/* Level 03: Elite Coaching */}
-          <article
-            className="price-card reveal is-visible"
-            onPointerMove={handlePointerMove}
-            onPointerLeave={handlePointerLeave}
-          >
-            <div className="price-top">
-              <span className="mono">LEVEL 03 / PERSONAL</span>
-              <span className="price-symbol">↗</span>
+          {/* Card 3: Elite Coaching */}
+          <div className="rounded-2xl bg-[#121215] border border-white/10 p-8 flex flex-col justify-between hover:border-[#FF9F00]/40 transition-all duration-300">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xl mb-6">
+                👑
+              </div>
+              <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-1">
+                ELITE COACHING
+              </h3>
+              <div className="mono text-xs text-slate-400 uppercase tracking-wider mb-6">
+                PREMIUM, HIGH-TOUCH COACHING
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-4xl font-black text-white">
+                  ₹{elitePrice.toLocaleString("en-IN")}
+                </span>
+                <span className="mono text-xs text-slate-400 uppercase">/ month</span>
+              </div>
+
+              <ul className="space-y-3.5 mb-8">
+                {[
+                  "Fully personalized training & periodization",
+                  "Advanced nutrition & lifestyle strategy",
+                  "Priority, direct access to the trainer",
+                  "Weekly reviews, tracking & refinements",
+                  "Competition / performance preparation",
+                ].map((feat, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-xs sm:text-sm text-slate-300">
+                    <span className="text-[#FF9F00] font-bold">✓</span>
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <h3>ELITE COACHING</h3>
-            <p>More personal attention for people ready to go all in.</p>
-            <div className="price-amount">
-              ₹{elitePrice.toLocaleString("en-IN")}{" "}
-              <span>/ MONTH</span>
-            </div>
-            <div className="price-rule" />
-            <ul>
-              <li>Individualized training approach</li>
-              <li>Personal fitness assessment</li>
-              <li>Agreed one-to-one sessions</li>
-              <li>Priority communication</li>
-              <li>Closer progress monitoring</li>
-            </ul>
+
             <button
-              className="price-button"
               type="button"
+              className="w-full py-3.5 px-6 rounded-full border border-white/15 hover:border-[#FF9F00] text-white hover:text-[#FF9F00] font-bold text-xs uppercase tracking-wider transition-all"
               onClick={() => onSelectPlan("Elite Coaching", elitePrice)}
             >
-              CHOOSE ELITE <span>↗</span>
+              GET ELITE COACHING <span className="ml-1 text-base leading-none">+</span>
             </button>
-          </article>
+          </div>
         </div>
 
-        {/* Pricing Footnote */}
-        <p className="pricing-footnote mono">
-          * SESSION FREQUENCY, SCHEDULE, MODE AND INCLUSIONS ARE DISCUSSED DIRECTLY WITH
-          MANSOOR BEFORE ENROLLMENT. GYM MEMBERSHIP MAY BE SEPARATE.
-        </p>
+        {/* Disclaimer Note */}
+        <div className="flex items-center justify-center gap-2 text-center text-xs text-slate-400 max-w-xl mx-auto">
+          <span className="text-[#FF9F00]">ⓘ</span>
+          <span>
+            Sessions and schedules are discussed directly with the trainer based on your goals,
+            availability, and chosen plan.
+          </span>
+        </div>
       </div>
     </section>
   );

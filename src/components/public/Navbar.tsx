@@ -66,12 +66,11 @@ export function Navbar({ onOpenInquiry, brandName = "SHAIK MANSOOR" }: NavbarPro
   return (
     <header className={`site-header ${scrolled ? "scrolled" : ""}`} id="siteHeader">
       {/* Brand Wordmark */}
-      <a href="#home" className="wordmark" aria-label="Shaik Mansoor, home" onClick={closeMenu}>
-        <span>
-          {brandName}
-          <span className="wordmark-period">.</span>
+      <a href="#home" className="wordmark" aria-label="Mansoor, home" onClick={closeMenu}>
+        <span className="text-xl font-black tracking-tight">
+          MANSOOR<span className="text-[#FF9F00]">.</span>
         </span>
-        <span className="wordmark-caption">FITNESS COACHING</span>
+        <span className="wordmark-caption text-[10px] tracking-widest text-[#94a3b8]">PERSONAL TRAINING</span>
       </a>
 
       {/* Navigation (Desktop & Mobile drawer) */}
@@ -113,12 +112,21 @@ export function Navbar({ onOpenInquiry, brandName = "SHAIK MANSOOR" }: NavbarPro
         <button
           className="btn btn-light nav-cta"
           type="button"
+          style={{
+            background: "linear-gradient(135deg, #FFB300 0%, #FF5722 100%)",
+            color: "#000000",
+            fontWeight: 800,
+            padding: "0 22px",
+            minHeight: "42px",
+            borderRadius: "9999px",
+            boxShadow: "0 4px 20px rgba(255, 140, 0, 0.4)",
+          }}
           onClick={() => {
             closeMenu();
             onOpenInquiry?.();
           }}
         >
-          GET IN TOUCH <span aria-hidden="true">↗</span>
+          CONTACT <span aria-hidden="true">+</span>
         </button>
       </nav>
 

@@ -33,52 +33,74 @@ const DEFAULT_FAQS = [
 export function FaqSection({ faqs }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const items = faqs && faqs.length > 0
-    ? faqs.map((f) => ({ question: f.question, answer: f.answer }))
-    : DEFAULT_FAQS;
+  const items =
+    faqs && faqs.length > 0
+      ? faqs.map((f) => ({ question: f.question, answer: f.answer }))
+      : DEFAULT_FAQS;
 
   const toggle = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);
   };
 
   return (
-    <section className="faq cream-section section-pad" id="faq">
-      <div className="proto-container">
+    <section className="section-pad relative overflow-hidden" id="faq" style={{ backgroundColor: "#09090b" }}>
+      <div className="proto-container relative z-10">
         {/* Section Topline */}
-        <div className="section-topline reveal is-visible">
-          <span className="section-index mono">06 / GOOD TO KNOW</span>
-          <span className="section-line" />
-          <span className="mono section-context">BEFORE YOU BEGIN</span>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="w-5 h-[2px] bg-[#FF9F00]" />
+          <span className="mono text-xs tracking-wider text-[#94a3b8] uppercase font-bold">
+            06 / GOOD TO KNOW
+          </span>
         </div>
 
         {/* FAQ Grid */}
-        <div className="faq-grid">
-          <div className="reveal is-visible">
-            <h2 className="display-big">
-              QUESTIONS?
-              <br />
-              <em>GOOD.</em>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-5">
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-white uppercase mb-4">
+              QUESTIONS?<br />
+              <span className="bg-gradient-to-r from-[#FFB300] to-[#FF5722] bg-clip-text text-transparent">
+                GOOD.
+              </span>
             </h2>
-            <p>Clear expectations. No confusing commitments.</p>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">
+              Clear expectations. No confusing commitments. Here is everything you need to know before getting started.
+            </p>
           </div>
 
-          <div className="faq-list reveal is-visible">
+          {/* Accordion List */}
+          <div className="lg:col-span-7 space-y-4">
             {items.map((item, idx) => {
               const isOpen = openIndex === idx;
               return (
-                <div key={idx} className="faq-item">
+                <div
+                  key={idx}
+                  className={`rounded-2xl bg-[#121215] border transition-all duration-300 overflow-hidden ${
+                    isOpen ? "border-[#FF9F00]/60 shadow-[0_4px_20px_rgba(255,140,0,0.15)]" : "border-white/10 hover:border-white/20"
+                  }`}
+                >
                   <button
                     type="button"
-                    className="faq-question"
-                    aria-expanded={isOpen}
                     onClick={() => toggle(idx)}
+                    className="w-full p-5 sm:p-6 text-left flex justify-between items-center gap-4 focus:outline-none"
+                    aria-expanded={isOpen}
                   >
-                    <span>{item.question}</span>
-                    <span className="faq-toggle">+</span>
+                    <span className="text-sm sm:text-base font-bold text-white tracking-tight">
+                      {item.question}
+                    </span>
+                    <span
+                      className={`w-7 h-7 rounded-full border border-white/10 flex items-center justify-center text-sm font-bold transition-transform duration-300 ${
+                        isOpen ? "rotate-45 bg-[#FF9F00] text-black border-transparent" : "text-[#FF9F00]"
+                      }`}
+                    >
+                      +
+                    </span>
                   </button>
-                  <div className="faq-answer">
-                    <p>{item.answer}</p>
-                  </div>
+
+                  {isOpen && (
+                    <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-white/5 pt-4">
+                      {item.answer}
+                    </div>
+                  )}
                 </div>
               );
             })}
