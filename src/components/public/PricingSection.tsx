@@ -1,155 +1,165 @@
 "use client";
 
-import React from "react";
-import { MonthlyPlan } from "@/types";
-import { formatINR } from "@/lib/utils";
+import React, { useRef } from "react";
+import { PricingPlan } from "@/types";
 
 interface PricingSectionProps {
-  plans: MonthlyPlan[];
+  plans?: PricingPlan[];
   onSelectPlan: (planName: string, price: number) => void;
 }
 
 export function PricingSection({ plans, onSelectPlan }: PricingSectionProps) {
+  // 3D tilt interaction matching prototype
+  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    const card = e.currentTarget;
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(800px) rotateX(${-y * 2.5}deg) rotateY(${x * 2.5}deg) translateY(-7px)`;
+  };
+
+  const handlePointerLeave = (e: React.PointerEvent<HTMLElement>) => {
+    e.currentTarget.style.transform = "";
+  };
+
+  // Default plans if none from CMS
+  const foundationPrice = plans?.find((p) => p.name.includes("Foundation"))?.price_inr || 999;
+  const transformationPrice =
+    plans?.find((p) => p.name.includes("Transformation"))?.price_inr || 1999;
+  const elitePrice = plans?.find((p) => p.name.includes("Elite"))?.price_inr || 3999;
+
   return (
-    <section
-      id="pricing"
-      className="w-full bg-[#0a0a0a] border-t border-[#222222] py-20 lg:py-28 text-white"
-    >
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
-        {/* Section Header */}
-        <div className="max-w-2xl mb-14 lg:mb-16">
-          <span className="text-[#888888] text-[12px] font-mono tracking-[0.2em] uppercase block mb-3">
-            MONTHLY PRICING PLANS
-          </span>
-          <h2 className="text-[32px] sm:text-[42px] lg:text-[46px] font-bold tracking-tight uppercase leading-[1.12]">
-            TRANSPARENT COACHING TIERS
-          </h2>
-          <p className="text-[#B5B5B5] text-[16px] sm:text-[18px] mt-3">
-            Clear monthly pricing with personalized instruction. No hidden cancellation clauses.
+    <section className="pricing dark-section section-pad" id="pricing">
+      <div className="proto-container">
+        {/* Section Topline */}
+        <div className="section-topline section-topline-dark reveal is-visible">
+          <span className="section-index mono">05 / THE INVESTMENT</span>
+          <span className="section-line" />
+          <span className="mono section-context">MONTHLY TRAINING</span>
+        </div>
+
+        {/* Section Heading */}
+        <div className="pricing-head reveal is-visible">
+          <div>
+            <p className="small-kicker">NO COMPLICATED PACKAGES.</p>
+            <h2 className="display-big">
+              PUT IN THE
+              <br />
+              <em>WORK.</em>
+            </h2>
+          </div>
+          <p>
+            Three ways to begin. Every plan starts with a conversation, because your training
+            schedule should fit your actual life.
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-12">
-          {plans.map((plan) => {
-            const isHighlighted = plan.is_highlighted;
-
-            return (
-              <div
-                key={plan.id}
-                className={`relative rounded-2xl flex flex-col justify-between transition-all duration-200 p-8 ${
-                  isHighlighted
-                    ? "bg-[#141414] border-2 border-white/80 shadow-2xl md:-translate-y-2"
-                    : "bg-[#0e0e0e] border border-[#2a2a2a] hover:border-[#444444]"
-                }`}
-              >
-                {/* Highlighted Badge */}
-                {isHighlighted && (
-                  <div className="absolute -top-3.5 left-8 bg-white text-black text-[10px] font-bold tracking-[0.16em] uppercase px-3 py-1 rounded-full shadow-md">
-                    RECOMMENDED
-                  </div>
-                )}
-
-                <div>
-                  {/* Plan Name & Tagline */}
-                  <div className="mb-6">
-                    <h3 className="text-xl font-bold uppercase tracking-tight text-white mb-2">
-                      {plan.name}
-                    </h3>
-                    <p className="text-xs text-[#999999] leading-relaxed min-h-[36px]">
-                      {plan.tagline}
-                    </p>
-                  </div>
-
-                  {/* Price Block */}
-                  <div className="mb-6 pb-6 border-b border-[#242424]">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-[34px] sm:text-[40px] font-extrabold text-white tracking-tight leading-none">
-                        {formatINR(plan.price_inr)}
-                      </span>
-                      <span className="text-xs text-[#888888] font-mono uppercase">
-                        / {plan.billing_period || "month"}
-                      </span>
-                    </div>
-                    <div className="text-[11px] font-mono text-[#777777] uppercase mt-2">
-                      Audience: {plan.target_audience}
-                    </div>
-                  </div>
-
-                  {/* Features List */}
-                  <div className="space-y-3 mb-8">
-                    <span className="text-[11px] font-mono text-[#888888] tracking-wider uppercase block mb-3">
-                      INCLUDED GUIDANCE
-                    </span>
-                    <ul className="space-y-2.5">
-                      {plan.features.map((feature, fIdx) => (
-                        <li key={fIdx} className="text-xs text-[#CCCCCC] flex items-start gap-2.5">
-                          <svg
-                            className="w-4 h-4 text-white shrink-0 mt-0.5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2.5}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                          <span className="leading-snug">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Card CTA & Disclaimer */}
-                <div>
-                  <button
-                    onClick={() => onSelectPlan(plan.name, plan.price_inr)}
-                    className={`w-full py-3.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 active:scale-95 ${
-                      isHighlighted
-                        ? "bg-white text-black hover:bg-neutral-200 shadow-md font-bold"
-                        : "bg-transparent text-white hover:bg-white hover:text-black border border-[#353535] hover:border-white"
-                    }`}
-                  >
-                    SELECT {plan.name}
-                  </button>
-
-                  <p className="text-[10px] text-[#666666] leading-tight text-center mt-3">
-                    Inquiry via WhatsApp • Final details agreed directly
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* =====================================================================
-            IMPORTANT BUSINESS RULES & FLEXIBLE SESSIONS DISCLAIMER
-            ===================================================================== */}
-        <div className="bg-[#0e0e0e] border border-[#222222] rounded-xl p-6 lg:p-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="text-white text-xs font-mono font-bold tracking-wider uppercase">
-                IMPORTANT COACHING ARRANGEMENT DETAILS
-              </span>
-              <p className="text-xs text-[#999999] leading-relaxed max-w-4xl">
-                Session counts, weekly frequency, and specific time slots are flexible and discussed
-                directly between you and Shaik Mansoor prior to enrollment. Plans do not imply
-                unlimited sessions. Standard facility membership fees for 7 Eleven Fitness Studio in
-                Bapatla are separate from coaching guidance.
-              </p>
+        {/* 3 Pricing Cards Grid */}
+        <div className="pricing-grid">
+          {/* Level 01: Foundation */}
+          <article
+            className="price-card reveal is-visible"
+            onPointerMove={handlePointerMove}
+            onPointerLeave={handlePointerLeave}
+          >
+            <div className="price-top">
+              <span className="mono">LEVEL 01 / ENTRY</span>
+              <span className="price-symbol">✳</span>
             </div>
-            <a
-              href="#contact"
-              className="shrink-0 text-xs text-white underline underline-offset-4 font-mono tracking-wider uppercase hover:text-neutral-300"
+            <h3>FOUNDATION</h3>
+            <p>Build your routine. Learn the fundamentals. Get moving with direction.</p>
+            <div className="price-amount">
+              ₹{foundationPrice.toLocaleString("en-IN")}{" "}
+              <span>/ MONTH</span>
+            </div>
+            <div className="price-rule" />
+            <ul>
+              <li>Basic workout guidance</li>
+              <li>Beginner exercise routines</li>
+              <li>Fundamental form guidance</li>
+              <li>General fitness support</li>
+            </ul>
+            <button
+              className="price-button"
+              type="button"
+              onClick={() => onSelectPlan("Foundation", foundationPrice)}
             >
-              HAVE QUESTIONS?
-            </a>
-          </div>
+              CHOOSE FOUNDATION <span>↗</span>
+            </button>
+          </article>
+
+          {/* Level 02: Transformation (Featured) */}
+          <article
+            className="price-card featured reveal is-visible"
+            onPointerMove={handlePointerMove}
+            onPointerLeave={handlePointerLeave}
+          >
+            <div className="price-top">
+              <span className="mono">LEVEL 02 / MOST POPULAR</span>
+              <span className="featured-tag mono">FOCUSED PROGRESS</span>
+            </div>
+            <h3>TRANSFORMATION</h3>
+            <p>Training with intent, built around the change you&apos;re working toward.</p>
+            <div className="price-amount">
+              ₹{transformationPrice.toLocaleString("en-IN")}{" "}
+              <span>/ MONTH</span>
+            </div>
+            <div className="price-rule" />
+            <ul>
+              <li>Personalized workout structure</li>
+              <li>Muscle gain or fat loss focus</li>
+              <li>Exercise form reviews</li>
+              <li>Progress discussions</li>
+              <li>Individual fitness guidance</li>
+            </ul>
+            <button
+              className="price-button"
+              type="button"
+              onClick={() => onSelectPlan("Transformation", transformationPrice)}
+            >
+              CHOOSE TRANSFORMATION <span>↗</span>
+            </button>
+          </article>
+
+          {/* Level 03: Elite Coaching */}
+          <article
+            className="price-card reveal is-visible"
+            onPointerMove={handlePointerMove}
+            onPointerLeave={handlePointerLeave}
+          >
+            <div className="price-top">
+              <span className="mono">LEVEL 03 / PERSONAL</span>
+              <span className="price-symbol">↗</span>
+            </div>
+            <h3>ELITE COACHING</h3>
+            <p>More personal attention for people ready to go all in.</p>
+            <div className="price-amount">
+              ₹{elitePrice.toLocaleString("en-IN")}{" "}
+              <span>/ MONTH</span>
+            </div>
+            <div className="price-rule" />
+            <ul>
+              <li>Individualized training approach</li>
+              <li>Personal fitness assessment</li>
+              <li>Agreed one-to-one sessions</li>
+              <li>Priority communication</li>
+              <li>Closer progress monitoring</li>
+            </ul>
+            <button
+              className="price-button"
+              type="button"
+              onClick={() => onSelectPlan("Elite Coaching", elitePrice)}
+            >
+              CHOOSE ELITE <span>↗</span>
+            </button>
+          </article>
         </div>
+
+        {/* Pricing Footnote */}
+        <p className="pricing-footnote mono">
+          * SESSION FREQUENCY, SCHEDULE, MODE AND INCLUSIONS ARE DISCUSSED DIRECTLY WITH
+          MANSOOR BEFORE ENROLLMENT. GYM MEMBERSHIP MAY BE SEPARATE.
+        </p>
       </div>
     </section>
   );

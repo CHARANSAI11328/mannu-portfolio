@@ -1,120 +1,123 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
 
 interface NavbarProps {
-  onOpenInquiry?: () => void;
+  onOpenInquiry?: (planName?: string) => void;
   brandName?: string;
 }
 
-export function Navbar({ onOpenInquiry, brandName = "MANSOOR" }: NavbarProps) {
+export function Navbar({ onOpenInquiry, brandName = "SHAIK MANSOOR" }: NavbarProps) {
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
-  const navLinks = [
-    { label: "ABOUT", href: "#about" },
-    { label: "SERVICES", href: "#services" },
-    { label: "RESULTS", href: "#results" },
-    { label: "PRICING", href: "#pricing" },
-  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 35);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sectionIds = ["about", "programs", "achievements", "pricing"];
+    const handleIntersection = () => {
+      const scrollPos = window.scrollY + 200;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            setActiveSection(id);
+            return;
+          }
+        }
+      }
+      if (window.scrollY < 300) {
+        setActiveSection("home");
+      }
+    };
+
+    window.addEventListener("scroll", handleIntersection, { passive: true });
+    handleIntersection();
+    return () => window.removeEventListener("scroll", handleIntersection);
+  }, []);
+
+  const closeMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   return (
-    <header
-      className="sticky top-0 z-50 w-full bg-[#000000] border-b border-[#222222] transition-colors"
-      style={{ minHeight: "86px" }}
-    >
-      <div
-        className="max-w-[1440px] mx-auto h-[86px] px-6 sm:px-10 lg:px-16 flex items-center justify-between"
-        style={{ height: "86px" }}
-      >
-        {/* Left: Brand Logo */}
-        <Link
-          href="/"
-          className="text-white text-[22px] sm:text-[24px] font-bold tracking-[0.18em] uppercase hover:opacity-90 transition-opacity select-none focus:outline-none focus:ring-1 focus:ring-white"
-        >
+    <header className={`site-header ${scrolled ? "scrolled" : ""}`} id="siteHeader">
+      {/* Brand Wordmark */}
+      <a href="#home" className="wordmark" aria-label="Shaik Mansoor, home" onClick={closeMenu}>
+        <span>
           {brandName}
-        </Link>
+          <span className="wordmark-period">.</span>
+        </span>
+        <span className="wordmark-caption">FITNESS COACHING</span>
+      </a>
 
-        {/* Right Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8 lg:gap-10" aria-label="Main Navigation">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-[#E0E0E0] hover:text-white text-[13px] font-medium tracking-[0.12em] uppercase transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+      {/* Desktop Navigation */}
+      <nav className={`main-nav ${mobileMenuOpen ? "open" : ""}`} aria-label="Main navigation" id="mainNav">
+        <a
+          href="#about"
+          className={activeSection === "about" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          ABOUT
+        </a>
+        <a
+          href="#programs"
+          className={activeSection === "programs" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          PROGRAMS
+        </a>
+        <a
+          href="#achievements"
+          className={activeSection === "achievements" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          RESULTS
+        </a>
+        <a
+          href="#pricing"
+          className={activeSection === "pricing" ? "active" : ""}
+          onClick={closeMenu}
+        >
+          PRICING
+        </a>
 
-          {/* White Pill CTA button */}
-          <button
-            onClick={onOpenInquiry}
-            className="inline-flex items-center justify-center bg-white text-black hover:bg-[#E5E5E5] text-[13px] font-semibold tracking-[0.08em] uppercase px-7 py-2.5 rounded-full transition-all duration-200 active:scale-95 shadow-sm"
-          >
-            GET IN TOUCH
-          </button>
-        </nav>
+        {/* CTA Button */}
+        <button
+          className="btn btn-light nav-cta"
+          type="button"
+          onClick={() => {
+            closeMenu();
+            onOpenInquiry?.();
+          }}
+        >
+          GET IN TOUCH <span aria-hidden="true">↗</span>
+        </button>
+      </nav>
 
-        {/* Mobile Hamburger Button */}
-        <div className="flex items-center gap-3 md:hidden">
-          <button
-            onClick={onOpenInquiry}
-            className="bg-white text-black text-[11px] font-semibold tracking-[0.08em] uppercase px-4 py-1.5 rounded-full"
-          >
-            INQUIRE
-          </button>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-white hover:text-neutral-300 focus:outline-none"
-            aria-label="Toggle Navigation Menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0a0a0a] border-b border-[#222222] px-6 py-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex flex-col space-y-3">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-[#CCCCCC] hover:text-white text-sm font-medium tracking-[0.14em] uppercase py-2 border-b border-[#1c1c1c]"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-          <div className="pt-2">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (onOpenInquiry) onOpenInquiry();
-              }}
-              className="w-full bg-white text-black font-semibold text-xs tracking-[0.1em] uppercase py-3 rounded-full text-center"
-            >
-              GET IN TOUCH
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Mobile Menu Toggle Button */}
+      <button
+        type="button"
+        className="menu-toggle"
+        id="menuToggle"
+        aria-expanded={mobileMenuOpen}
+        aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        aria-controls="mainNav"
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+      >
+        <span></span>
+        <span></span>
+      </button>
     </header>
   );
 }

@@ -1,98 +1,205 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { TrainingProgram } from "@/types";
 
 interface ServicesSectionProps {
-  programs: TrainingProgram[];
+  programs?: TrainingProgram[];
   onSelectProgram: (programTitle: string) => void;
 }
 
-export function ServicesSection({ programs, onSelectProgram }: ServicesSectionProps) {
+interface PrototypeProgramItem {
+  number: string;
+  name: string;
+  type: string;
+  title: string;
+  description: string;
+  goal: string;
+}
+
+const DEFAULT_PROGRAMS: PrototypeProgramItem[] = [
+  {
+    number: "01",
+    name: "MUSCLE BUILDING",
+    type: "BUILD SIZE WITH INTENT",
+    title: "OWN THE<br/>NEXT REP.",
+    description:
+      "A purposeful path to adding muscle through structured training, exercise technique, and consistent progression.",
+    goal: "Muscle building",
+  },
+  {
+    number: "02",
+    name: "FAT LOSS",
+    type: "MOVE WITH CONFIDENCE",
+    title: "BUILD A<br/>LEANER YOU.",
+    description:
+      "Create a sustainable approach to fat loss with training guidance that fits your schedule and starting point.",
+    goal: "Fat loss",
+  },
+  {
+    number: "03",
+    name: "STRENGTH TRAINING",
+    type: "POWER WITH PURPOSE",
+    title: "GET<br/>STRONGER.",
+    description:
+      "Practice the fundamental lifts, improve movement quality, and build strength over time.",
+    goal: "Strength training",
+  },
+  {
+    number: "04",
+    name: "BODYBUILDING PREP",
+    type: "PREPARE FOR THE STAGE",
+    title: "PRECISION.<br/>DISCIPLINE.",
+    description:
+      "Discuss structured bodybuilding preparation and competition-focused goals with a trainer who has stage experience.",
+    goal: "Bodybuilding prep",
+  },
+  {
+    number: "05",
+    name: "BEGINNER FITNESS",
+    type: "THE FIRST STEP MATTERS",
+    title: "START<br/>STRONG.",
+    description:
+      "Learn foundational movement patterns and build the confidence to make training part of your routine.",
+    goal: "Beginner fitness",
+  },
+  {
+    number: "06",
+    name: "CONDITIONING",
+    type: "BETTER EVERY SESSION",
+    title: "MOVE.<br/>ENDURE.",
+    description:
+      "Develop general fitness and work capacity through a thoughtfully balanced training approach.",
+    goal: "Conditioning",
+  },
+];
+
+export function ServicesSection({ onSelectProgram }: ServicesSectionProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isSwitching, setIsSwitching] = useState(false);
+
+  const activeProg = DEFAULT_PROGRAMS[selectedIndex];
+
+  const handleSelect = (idx: number) => {
+    if (idx === selectedIndex) return;
+    setIsSwitching(true);
+    setSelectedIndex(idx);
+    setTimeout(() => setIsSwitching(false), 250);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, idx: number) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = (idx + 1) % DEFAULT_PROGRAMS.length;
+      handleSelect(next);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = (idx + DEFAULT_PROGRAMS.length - 1) % DEFAULT_PROGRAMS.length;
+      handleSelect(prev);
+    }
+  };
+
   return (
-    <section
-      id="services"
-      className="w-full bg-[#080808] border-t border-[#222222] py-20 lg:py-28 text-white"
-    >
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 lg:mb-16 gap-6">
-          <div className="max-w-2xl">
-            <span className="text-[#888888] text-[12px] font-mono tracking-[0.2em] uppercase block mb-3">
-              TRAINING PROGRAMS
-            </span>
-            <h2 className="text-[32px] sm:text-[42px] lg:text-[46px] font-bold tracking-tight uppercase leading-[1.12]">
-              STRUCTURED PROGRAMS. REAL PROGRESS.
-            </h2>
-            <p className="text-[#B5B5B5] text-[16px] sm:text-[18px] mt-3">
-              Every program is structured around progressive overload, biomechanical safety, and
-              individual accountability.
-            </p>
-          </div>
-          <div className="text-xs text-[#888888] font-mono uppercase tracking-wider">
-            Available: Online & Offline (Bapatla)
-          </div>
+    <section className="programs dark-section section-pad" id="programs">
+      <div className="proto-container">
+        {/* Section Topline */}
+        <div className="section-topline section-topline-dark reveal is-visible">
+          <span className="section-index mono">02 / WHAT WE BUILD</span>
+          <span className="section-line" />
+          <span className="mono section-context">CHOOSE YOUR DIRECTION</span>
         </div>
 
-        {/* Programs Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {programs.map((prog, idx) => (
+        {/* Section Heading */}
+        <div className="section-head reveal is-visible">
+          <div>
+            <p className="small-kicker">TRAIN FOR THE PERSON YOU WANT TO BECOME.</p>
+            <h2 className="display-big">
+              CHOOSE
+              <br />
+              <em>YOUR EDGE.</em>
+            </h2>
+          </div>
+          <p className="section-head-aside">
+            A different goal deserves a different approach. Choose your focus to explore how
+            we train.
+          </p>
+        </div>
+
+        {/* Interactive Workbench */}
+        <div className="program-workbench">
+          {/* Left: Tab list */}
+          <div
+            className="program-list"
+            role="tablist"
+            aria-label="Training programs"
+            id="programList"
+          >
+            {DEFAULT_PROGRAMS.map((prog, idx) => {
+              const isSelected = idx === selectedIndex;
+              return (
+                <button
+                  key={prog.number}
+                  role="tab"
+                  className={`program-row ${isSelected ? "is-selected" : ""}`}
+                  type="button"
+                  aria-selected={isSelected}
+                  onClick={() => handleSelect(idx)}
+                  onKeyDown={(e) => handleKeyDown(e, idx)}
+                >
+                  <span className="program-number mono">{prog.number}</span>
+                  <span className="program-name">{prog.name}</span>
+                  <span className="program-arrow">↗</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: Stage with 3D rotating CSS weight plate */}
+          <div
+            className={`program-stage ${isSwitching ? "stage-switch" : ""}`}
+            id="programStage"
+            role="tabpanel"
+            aria-live="polite"
+          >
+            <div className="stage-top">
+              <span className="mono stage-tag">
+                PROGRAM SPOTLIGHT / <span>{activeProg.number}</span>
+              </span>
+              <span className="stage-plus">+</span>
+            </div>
+
+            {/* 3D Barbell Weight Plate Graphic */}
             <div
-              key={prog.id}
-              className="bg-[#101010] border border-[#262626] hover:border-[#404040] rounded-xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 group"
+              className="plate-graphic"
+              aria-hidden="true"
+              style={{
+                transform: `translateX(-50%) rotate(${selectedIndex * 36}deg)`,
+              }}
             >
-              <div>
-                {/* Header meta */}
-                <div className="flex items-center justify-between text-xs font-mono uppercase text-[#737373] mb-4">
-                  <span>0{idx + 1} / {prog.category}</span>
-                  <div className="flex items-center gap-1.5">
-                    {prog.training_modes.map((mode) => (
-                      <span
-                        key={mode}
-                        className="px-2 py-0.5 rounded text-[10px] tracking-wider uppercase border border-[#333333] text-[#A3A3A3]"
-                      >
-                        {mode}
-                      </span>
-                    ))}
+              <div className="plate-rim plate-rim-outer">
+                <div className="plate-rim plate-rim-mid">
+                  <div className="plate-rim plate-rim-inner">
+                    <span className="plate-center">M</span>
                   </div>
                 </div>
-
-                {/* Program Title */}
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight uppercase mb-3 group-hover:text-neutral-200 transition-colors">
-                  {prog.title}
-                </h3>
-
-                {/* Program Description */}
-                <p className="text-[#B5B5B5] text-sm leading-relaxed mb-5">
-                  {prog.description}
-                </p>
-
-                {/* Target Audience */}
-                <div className="text-xs text-[#888888] mb-5 border-l-2 border-[#333333] pl-3 py-0.5">
-                  <span className="text-[#A3A3A3] font-medium">Ideal for: </span>
-                  {prog.target_audience}
-                </div>
-
-                {/* Features List */}
-                <ul className="space-y-2 mb-6">
-                  {prog.features.map((feature, fIdx) => (
-                    <li key={fIdx} className="text-xs text-[#CCCCCC] flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/70"></span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
+              <div className="plate-line" />
+            </div>
 
-              {/* Action Button */}
+            {/* Stage bottom copy and CTA */}
+            <div className="stage-bottom">
+              <span className="stage-type mono">{activeProg.type}</span>
+              <h3 dangerouslySetInnerHTML={{ __html: activeProg.title }} />
+              <p>{activeProg.description}</p>
               <button
-                onClick={() => onSelectProgram(prog.title)}
-                className="w-full mt-4 bg-transparent hover:bg-white text-white hover:text-black border border-[#353535] hover:border-white text-xs font-semibold tracking-wider uppercase py-3 rounded-full transition-all duration-200 text-center"
+                className="stage-cta"
+                type="button"
+                onClick={() => onSelectProgram(activeProg.goal)}
               >
-                INQUIRE ON WHATSAPP
+                EXPLORE THIS COACHING <span>↗</span>
               </button>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
