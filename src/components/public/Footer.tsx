@@ -12,6 +12,7 @@ interface FooterProps {
 }
 
 export function Footer({
+  contact,
   brandName = "MANSOOR",
   tagline = "BUILT BY DISCIPLINE.",
   onOpenPreviewSettings,
@@ -27,7 +28,17 @@ export function Footer({
             {brandName}
             <span>.</span>
           </a>
-          <span className="mono">PERSONAL FITNESS COACHING · BAPATLA, INDIA</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <a
+              href={`tel:${contact?.phone_number?.replace(/\s+/g, "") || "+919676393689"}`}
+              className="mono text-xs text-[#919b8e] hover:text-[#d7f16a] transition-colors"
+              title="Call Shaik Mansoor"
+            >
+              📞 {contact?.phone_number || "+91 96763 93689"}
+            </a>
+            <span className="mono text-[#919b8e] hidden sm:inline">·</span>
+            <span className="mono">PERSONAL FITNESS COACHING · BAPATLA, INDIA</span>
+          </div>
         </div>
 
         {/* Footer Bottom */}

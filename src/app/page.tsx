@@ -24,7 +24,7 @@ export default function HomePage() {
   const [modalDefaultPlan, setModalDefaultPlan] = useState<string | undefined>(undefined);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState(
-    INITIAL_CMS_DATA.contact?.whatsapp_number || "919876543210"
+    INITIAL_CMS_DATA.contact?.whatsapp_number || "919676393689"
   );
 
   // High-performance direct DOM RAF scroll-progress bar (NO React re-renders on scroll!)

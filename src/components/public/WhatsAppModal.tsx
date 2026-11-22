@@ -12,7 +12,7 @@ interface WhatsAppModalProps {
 export function WhatsAppModal({
   isOpen,
   onClose,
-  whatsappNumber = "919876543210",
+  whatsappNumber = "919676393689",
   defaultPlan,
 }: WhatsAppModalProps) {
   const [name, setName] = useState("");

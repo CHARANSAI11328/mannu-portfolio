@@ -111,7 +111,7 @@ export function PreviewSettingsModal({
           <input
             type="tel"
             id="whatsappSetting"
-            placeholder="e.g. 919876543210"
+            placeholder="e.g. 919676393689"
             value={whatsappNumber}
             onChange={(e) => onUpdateWhatsapp(e.target.value)}
           />

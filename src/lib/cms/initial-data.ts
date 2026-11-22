@@ -325,8 +325,8 @@ export const INITIAL_CMS_DATA: AppStoreData = {
   ],
   transformations: [], // Zero fabricated transformations; section auto-hides until approved records uploaded
   contact: {
-    whatsapp_number: "+919876543210", // CMS-configurable trainer WhatsApp number
-    phone_number: "+919876543210",
+    whatsapp_number: "+91 96763 93689", // CMS-configurable trainer WhatsApp number
+    phone_number: "+91 96763 93689",
     email: "contact@mansoorfitness.com",
     instagram_handle: "mansoor_fitness",
     gym_name: "7 Eleven Fitness Studio",

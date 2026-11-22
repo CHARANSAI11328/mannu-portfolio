@@ -82,7 +82,7 @@ export default function AdminContactPage() {
               required
               value={contact.whatsapp_number}
               onChange={(e) => setContact({ ...contact, whatsapp_number: e.target.value })}
-              placeholder="+919876543210"
+              placeholder="+91 96763 93689"
               className="w-full border border-slate-300 rounded px-3 py-2 outline-none font-mono text-sm font-bold"
             />
             <span className="text-[10px] text-slate-400 mt-1 block">
@@ -98,7 +98,7 @@ export default function AdminContactPage() {
               type="text"
               value={contact.phone_number || ""}
               onChange={(e) => setContact({ ...contact, phone_number: e.target.value })}
-              placeholder="+919876543210"
+              placeholder="+91 96763 93689"
               className="w-full border border-slate-300 rounded px-3 py-2 outline-none font-mono"
             />
           </div>
