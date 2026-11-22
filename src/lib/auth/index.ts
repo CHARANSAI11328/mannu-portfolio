@@ -10,16 +10,46 @@ export interface AdminUser {
   role: "admin";
 }
 
-export function verifyAdminCredentials(email?: string, password?: string): AdminUser | null {
-  if (!email || !password) return null;
-  const cleanEmail = email.trim().toLowerCase();
-  if (cleanEmail === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+/**
+ * Verifies admin credentials. Supports both:
+ * 1. Single-field password login ("GYM" or default ADMIN_PASSWORD)
+ * 2. Full email + password login (for backward compatibility and tests)
+ */
+export function verifyAdminCredentials(
+  emailOrPassword?: string,
+  password?: string
+): AdminUser | null {
+  if (!emailOrPassword) return null;
+
+  // Single-field password mode
+  if (!password) {
+    const inputPass = emailOrPassword.trim();
+    if (inputPass === "GYM" || inputPass === ADMIN_PASSWORD) {
+      return {
+        email: ADMIN_EMAIL,
+        name: "Shaik Mansoor",
+        role: "admin",
+      };
+    }
+    return null;
+  }
+
+  // Full email + password mode
+  const cleanEmail = emailOrPassword.trim().toLowerCase();
+  const cleanPassword = password.trim();
+
+  // Allow "GYM" as password for any admin email attempt as well
+  if (
+    (cleanEmail === ADMIN_EMAIL.toLowerCase() || cleanEmail === "admin") &&
+    (cleanPassword === "GYM" || cleanPassword === ADMIN_PASSWORD)
+  ) {
     return {
       email: ADMIN_EMAIL,
       name: "Shaik Mansoor",
       role: "admin",
     };
   }
+
   return null;
 }
 

@@ -3,12 +3,22 @@ import { verifyAdminCredentials, generateSessionToken } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { email, password } = body;
 
-    const user = verifyAdminCredentials(email, password);
+    // Handle single-field password login (e.g. { password: "GYM" })
+    let user = null;
+    if (password && !email) {
+      user = verifyAdminCredentials(password);
+    } else if (email && password) {
+      user = verifyAdminCredentials(email, password);
+    } else if (password) {
+      user = verifyAdminCredentials(password);
+    }
+
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid email or password. Please verify your credentials." },
+        { error: "Invalid password. Enter the admin access key." },
         { status: 401 }
       );
     }

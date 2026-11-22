@@ -18,17 +18,24 @@ export function HeroSection({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [hasVideo, setHasVideo] = useState(false);
 
-  // Parallax effect matching the prototype
+  // Calmer, silky smooth RAF-throttled parallax effect
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (window.innerWidth > 700 && parallaxRef.current) {
-        const y = window.scrollY;
-        parallaxRef.current.style.setProperty(
-          "--parallax",
-          `${Math.min(y * 0.13, 100)}px`
-        );
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (window.innerWidth > 768 && parallaxRef.current) {
+          const y = window.scrollY;
+          // Calmed multiplier from 0.13 to 0.05 for a slow, gentle, smooth cinematic feel
+          const offset = Math.min(y * 0.05, 60);
+          parallaxRef.current.style.setProperty("--parallax", `${offset}px`);
+        }
+        ticking = false;
+      });
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -41,7 +48,7 @@ export function HeroSection({
 
   return (
     <section className="hero" id="home" aria-label="Shaik Mansoor fitness coaching">
-      {/* Background Visual Layer with Parallax */}
+      {/* Background Visual Layer with Gentle Parallax */}
       <div className="hero-photo-layer" id="heroParallax" ref={parallaxRef}>
         <img
           id="heroPoster"
@@ -70,7 +77,7 @@ export function HeroSection({
         M
       </div>
 
-      {/* Vertical Edge Label */}
+      {/* Vertical Edge Label (Desktop only) */}
       <div className="hero-edge-label" aria-hidden="true">
         DISCIPLINE / EVERY DAY
       </div>
@@ -119,7 +126,7 @@ export function HeroSection({
         </div>
       </div>
 
-      {/* Right Standard Note */}
+      {/* Right Standard Note (Desktop only) */}
       <div className="hero-right-note reveal is-visible">
         <span className="mono small-index">01 / THE STANDARD</span>
         <p>No shortcuts. No guesswork. Just focused training built around your goals.</p>

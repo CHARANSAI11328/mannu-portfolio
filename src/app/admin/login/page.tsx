@@ -6,7 +6,6 @@ import Link from "next/link";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +16,8 @@ export default function AdminLoginPage() {
     setError(null);
 
     try {
-      if (!email.trim() || !password.trim()) {
-        setError("Please enter both email and password.");
+      if (!password.trim()) {
+        setError("Please enter the password.");
         setIsLoading(false);
         return;
       }
@@ -26,90 +25,84 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), password }),
+        body: JSON.stringify({ password: password.trim() }),
       });
 
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(json.error || "Authentication failed. Please check your credentials.");
+        setError(json.error || "Incorrect password. Access denied.");
         return;
       }
 
-      // Successful server authentication transition to admin portal
+      // Successful server authentication
       router.push("/admin");
       router.refresh();
     } catch {
-      setError("An unexpected network error occurred during login.");
+      setError("An unexpected network error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-8 shadow-sm text-slate-900 space-y-6">
-        <div className="text-center space-y-1">
+    <div className="min-h-screen bg-[#080909] text-[#f6f6f0] flex flex-col items-center justify-center p-6 selection:bg-[#d7f16a] selection:text-black">
+      <div className="w-full max-w-md bg-[#101211] border border-[#252825] p-8 sm:p-10 rounded-2xl shadow-2xl relative overflow-hidden">
+        {/* Subtle top lime glow line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#d7f16a]" />
+
+        {/* Brand & Heading */}
+        <div className="text-center mb-8">
           <Link
             href="/"
-            className="font-black text-xl tracking-widest uppercase text-slate-900 block"
+            className="text-2xl font-black tracking-wider uppercase text-white hover:text-[#d7f16a] transition-colors block"
           >
-            MANSOOR
+            MANSOOR<span className="text-[#d7f16a]">.</span>
           </Link>
-          <span className="text-xs text-slate-500 font-mono block">
-            ADMIN CONTROL PORTAL
+          <span className="text-[10px] font-mono tracking-[0.25em] text-[#8b9089] uppercase block mt-2">
+            ADMIN PORTAL ACCESS
           </span>
         </div>
 
+        {/* Error message */}
         {error && (
-          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs text-red-700">
+          <div className="mb-6 p-3.5 rounded-lg bg-red-950/60 border border-red-800 text-xs text-red-200 text-center font-mono">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        {/* Single Password Field Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              ADMIN EMAIL
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="mansoor@fitness.com"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 outline-none focus:border-slate-900"
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              PASSWORD
+            <label className="block text-[11px] font-mono tracking-wider text-[#aeb5aa] uppercase mb-2">
+              ACCESS PASSWORD
             </label>
             <input
               type="password"
               required
+              autoFocus
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 outline-none focus:border-slate-900"
+              placeholder="Enter password"
+              className="w-full bg-[#171a18] border border-[#3b433a] focus:border-[#d7f16a] text-white rounded-lg px-4 py-3.5 text-sm tracking-wider outline-none transition-colors"
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-semibold text-xs tracking-wider uppercase py-3 rounded-lg transition-colors mt-2"
+            className="w-full bg-[#d7f16a] hover:bg-white text-black font-extrabold text-xs tracking-wider uppercase py-4 rounded-full transition-all duration-200 active:scale-98 cursor-pointer disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
           >
-            {isLoading ? "Signing in..." : "SIGN IN TO CMS"}
+            {isLoading ? "AUTHENTICATING..." : "ENTER ADMIN PORTAL ↗"}
           </button>
         </form>
 
-        <div className="border-t border-slate-100 pt-4 text-center">
+        {/* Back Link */}
+        <div className="mt-8 text-center border-t border-[#252825] pt-6">
           <Link
             href="/"
-            className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
+            className="text-xs font-mono text-[#7a8276] hover:text-[#d7f16a] transition-colors"
           >
-            ← Back to Public Website
+            ← Return to Website
           </Link>
         </div>
       </div>

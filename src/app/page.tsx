@@ -26,22 +26,31 @@ export default function HomePage() {
   const [whatsappNumber, setWhatsappNumber] = useState(
     INITIAL_CMS_DATA.contact?.whatsapp_number || "919876543210"
   );
-  const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Scroll Progress Bar
+  // High-performance direct DOM RAF scroll-progress bar (NO React re-renders on scroll!)
   useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(max > 0 ? (y / max) * 100 : 0);
+    let ticking = false;
+    const bar = document.getElementById("scrollProgress");
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (bar) {
+          const y = window.scrollY;
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          bar.style.width = (max > 0 ? (y / max) * 100 : 0) + "%";
+        }
+        ticking = false;
+      });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Fetch published CMS content
+  // Fetch published CMS content once on mount
   useEffect(() => {
     async function loadData() {
       try {
@@ -74,18 +83,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#080909] text-[#f6f6f0] flex flex-col selection:bg-[#d7f16a] selection:text-black">
-      {/* 1. Scroll-driven progress bar */}
-      <div
-        id="scrollProgress"
-        className="scroll-progress"
-        style={{ width: `${scrollProgress}%` }}
-        aria-hidden="true"
-      />
+      {/* 1. Hardware-accelerated Scroll Progress Bar (Direct DOM update) */}
+      <div id="scrollProgress" className="scroll-progress" aria-hidden="true" />
 
-      {/* 2. Ambient Film Noise Filter */}
+      {/* 2. Isolated Ambient Noise Texture */}
       <div className="noise" aria-hidden="true" />
 
-      {/* 3. Site Navigation Header */}
+      {/* 3. Authoritative Header */}
       <Navbar
         brandName="SHAIK MANSOOR"
         onOpenInquiry={() => openInquiryModal()}
@@ -160,7 +164,7 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* 14. Footer */}
+      {/* 14. Footer with discreet admin lock */}
       <Footer
         contact={data.contact}
         brandName="MANSOOR"

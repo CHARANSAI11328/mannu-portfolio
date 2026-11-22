@@ -12,38 +12,51 @@ export function Navbar({ onOpenInquiry, brandName = "SHAIK MANSOOR" }: NavbarPro
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
+  // High-performance RAF throttle for navbar scrolled state
   useEffect(() => {
+    let ticking = false;
+    let isScrolled = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 35);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const nextScrolled = window.scrollY > 35;
+        if (nextScrolled !== isScrolled) {
+          isScrolled = nextScrolled;
+          setScrolled(nextScrolled);
+        }
+        ticking = false;
+      });
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // High-performance IntersectionObserver for active section (Zero layout thrashing!)
   useEffect(() => {
-    const sectionIds = ["about", "programs", "achievements", "pricing"];
-    const handleIntersection = () => {
-      const scrollPos = window.scrollY + 200;
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(id);
-            return;
+    const sectionIds = ["home", "about", "programs", "achievements", "pricing"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
           }
-        }
+        });
+      },
+      {
+        rootMargin: "-25% 0px -65% 0px",
       }
-      if (window.scrollY < 300) {
-        setActiveSection("home");
-      }
-    };
+    );
 
-    window.addEventListener("scroll", handleIntersection, { passive: true });
-    handleIntersection();
-    return () => window.removeEventListener("scroll", handleIntersection);
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const closeMenu = () => {
@@ -61,8 +74,12 @@ export function Navbar({ onOpenInquiry, brandName = "SHAIK MANSOOR" }: NavbarPro
         <span className="wordmark-caption">FITNESS COACHING</span>
       </a>
 
-      {/* Desktop Navigation */}
-      <nav className={`main-nav ${mobileMenuOpen ? "open" : ""}`} aria-label="Main navigation" id="mainNav">
+      {/* Navigation (Desktop & Mobile drawer) */}
+      <nav
+        className={`main-nav ${mobileMenuOpen ? "open" : ""}`}
+        aria-label="Main navigation"
+        id="mainNav"
+      >
         <a
           href="#about"
           className={activeSection === "about" ? "active" : ""}
@@ -115,8 +132,8 @@ export function Navbar({ onOpenInquiry, brandName = "SHAIK MANSOOR" }: NavbarPro
         aria-controls="mainNav"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
-        <span></span>
-        <span></span>
+        <span />
+        <span />
       </button>
     </header>
   );

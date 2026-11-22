@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { ContactInfo } from "@/types";
 
 interface FooterProps {
@@ -31,9 +32,21 @@ export function Footer({
 
         {/* Footer Bottom */}
         <div className="footer-bottom">
-          <span>
-            © {currentYear} SHAIK MANSOOR. {tagline}
-          </span>
+          <div className="flex items-center gap-2">
+            <span>
+              © {currentYear} SHAIK MANSOOR. {tagline}
+            </span>
+            {/* Subtle discreet lock icon linking to admin portal */}
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center justify-center opacity-30 hover:opacity-100 transition-opacity p-1 text-[11px] text-[#919b8e] hover:text-[#d7f16a]"
+              title="Admin Portal"
+              aria-label="Admin Portal"
+            >
+              🔒
+            </Link>
+          </div>
+
           <div>
             <a href="#about">ABOUT</a>
             <a href="#programs">PROGRAMS</a>
