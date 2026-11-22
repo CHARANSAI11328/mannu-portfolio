@@ -127,7 +127,7 @@ All captured screenshots are archived in [`docs/screenshots/`](file:///d:/mannu-
 
 2. **Admin Authentication Flow**:
    - Attempted submission with invalid password rejected with appropriate error state.
-   - Submitted verified credentials (`mansoor@fitness.com` / `MansoorFitness@2026`).
+   - Submitted configured admin credentials.
    - Server issued secure HMAC-signed session cookie.
    - Browser redirected automatically to `/admin` dashboard.
    - Status: **PASSED (100%)**
