@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build --webpack",
-    "start": "next start",
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "build:css": "npx tailwindcss@3.4.17 --content \"./src/**/*.{js,ts,jsx,tsx,mdx}\" -o ./src/app/tailwind.css",
+    "build": "npm run build:css && node node_modules/next/dist/bin/next build --webpack",
+    "start": "node node_modules/next/dist/bin/next start",
     "lint": "eslint",
     "test": "node --experimental-strip-types tests/runner.mjs",
     "test:visual": "node tests/visual-qa.mjs",

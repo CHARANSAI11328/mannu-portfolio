@@ -15,11 +15,13 @@ export function HeroSection({ data, onOpenInquiry }: HeroSectionProps) {
 
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
       videoRef.current.play().catch(() => {
         // Autoplay policy or video not ready
       });
     }
-  }, [data.video_url]);
+  }, [data.video_url, data.mobile_video_url]);
 
   const focalPointClass =
     data.focal_point === "center-right"
@@ -47,9 +49,10 @@ export function HeroSection({ data, onOpenInquiry }: HeroSectionProps) {
             ref={videoRef}
             autoPlay
             muted
+            defaultMuted
             loop
             playsInline
-            poster={data.poster_url || data.fallback_image_url}
+            poster={data.poster_url || data.fallback_image_url || "/images/mansoor-hero-poster.jpg"}
             onError={() => setVideoError(true)}
             onLoadedData={() => setVideoLoaded(true)}
             className={`w-full h-full object-cover ${focalPointClass} transition-opacity duration-1000 ${
@@ -61,6 +64,9 @@ export function HeroSection({ data, onOpenInquiry }: HeroSectionProps) {
               }%) contrast(${data.video_contrast || 120}%)`,
             }}
           >
+            {data.mobile_video_url && (
+              <source src={data.mobile_video_url} media="(max-width: 768px)" type="video/mp4" />
+            )}
             {data.video_url && <source src={data.video_url} type="video/mp4" />}
           </video>
         ) : null}
@@ -70,8 +76,8 @@ export function HeroSection({ data, onOpenInquiry }: HeroSectionProps) {
           <div
             className="absolute inset-0 bg-cover bg-no-repeat bg-right-top transition-opacity duration-700"
             style={{
-              backgroundImage: data.fallback_image_url
-                ? `url(${data.fallback_image_url})`
+              backgroundImage: (data.poster_url || data.fallback_image_url)
+                ? `url(${data.poster_url || data.fallback_image_url})`
                 : "radial-gradient(ellipse at 70% 40%, #1e1e1e 0%, #0d0d0d 45%, #000000 80%)",
               filter: `${data.grayscale ? "grayscale(100%)" : ""} brightness(85%) contrast(120%)`,
             }}

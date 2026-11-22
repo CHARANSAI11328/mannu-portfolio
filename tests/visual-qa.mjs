@@ -43,6 +43,13 @@ async function runVisualQA() {
 
   const page = await browser.newPage();
 
+  const networkErrors = [];
+  page.on("response", (res) => {
+    if (res.status() >= 400 && res.url().startsWith(BASE_URL)) {
+      networkErrors.push(`${res.status()} ${res.url()}`);
+    }
+  });
+
   // ---------------------------------------------------------------------------
   // 1. DESKTOP VIEWPORT: 1440 x 900 (Homepage Hero & Navigation)
   // ---------------------------------------------------------------------------
@@ -66,7 +73,7 @@ async function runVisualQA() {
       .filter(t => t === "GET IN TOUCH" || t === "PRICING");
     const bottomParagraph = document.querySelector("#hero div.border-t p, #hero div.lg\\:border-l p")?.innerText.trim();
     const video = document.querySelector("#hero video");
-    const videoSrc = video ? video.querySelector("source")?.getAttribute("src") : null;
+    const videoSources = Array.from(video ? video.querySelectorAll("source") : []).map(s => s.getAttribute("src"));
 
     return {
       headerHeight: headerRect ? Math.round(headerRect.height) : 0,
@@ -78,7 +85,7 @@ async function runVisualQA() {
       primaryDesc,
       ctas,
       bottomParagraph,
-      videoSrc
+      videoSources
     };
   });
 
@@ -91,7 +98,7 @@ async function runVisualQA() {
   recordCheck("Primary Description Present", Boolean(heroData.primaryDesc && heroData.primaryDesc.includes("Personal training programs")));
   recordCheck("Pill CTAs Present", heroData.ctas.includes("GET IN TOUCH") && heroData.ctas.includes("PRICING"));
   recordCheck("Bottom-Right Secondary Paragraph Present", Boolean(heroData.bottomParagraph && heroData.bottomParagraph.includes("No shortcuts")));
-  recordCheck("Monochrome Athletic Video Attached", heroData.videoSrc === "/videos/mansoor-hero.mp4");
+  recordCheck("Monochrome Athletic Video Attached", heroData.videoSources.includes("/videos/mansoor-hero.mp4"), `Sources: ${heroData.videoSources.join(", ")}`);
 
   // Capture Hero & Navigation Screenshot
   const heroShotPath = path.join(SCREENSHOTS_DIR, "01-desktop-hero-1440x900.png");
@@ -137,10 +144,7 @@ async function runVisualQA() {
 
   // Open Navigation Drawer
   console.log("Opening mobile navigation drawer...");
-  await page.evaluate(() => {
-    const btn = document.querySelector('button[aria-label="Toggle Navigation Menu"]');
-    if (btn) btn.click();
-  });
+  await page.click('button[aria-label="Toggle Navigation Menu"]');
   await new Promise(r => setTimeout(r, 400)); // drawer transition
 
   const drawerVisible = await page.evaluate(() => {
@@ -172,10 +176,7 @@ async function runVisualQA() {
   });
 
   // Click "GET IN TOUCH" in header
-  await page.evaluate(() => {
-    const btn = document.querySelector("header nav button");
-    if (btn) btn.click();
-  });
+  await page.click("header nav button");
   await page.waitForSelector('[role="dialog"]', { visible: true });
 
   // Fill in Form
@@ -189,10 +190,7 @@ async function runVisualQA() {
   results.screenshots.push("05-whatsapp-modal-open.png");
 
   // Submit modal form
-  await page.evaluate(() => {
-    const submitBtn = document.querySelector('[role="dialog"] button[type="submit"]');
-    if (submitBtn) submitBtn.click();
-  });
+  await page.click('[role="dialog"] button[type="submit"]');
 
   await new Promise(r => setTimeout(r, 300));
   const generatedUrl = await page.evaluate(() => window.__lastOpenedUrl);
@@ -302,6 +300,8 @@ async function runVisualQA() {
   const finalPubRes = await fetch(`${BASE_URL}/api/cms/published`);
   const finalPubData = await finalPubRes.json();
   recordCheck("Restored Original Published State Cleanly", finalPubData.hero.headline === originalHeadline);
+
+  recordCheck("No Local 404/500 Network Failures", networkErrors.length === 0, networkErrors.join("; "));
 
   await browser.close();
 

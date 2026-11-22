@@ -160,8 +160,8 @@ test("CMS Privacy & Consent Gates", async (t) => {
     saveTransformation({
       id: "unconsented-test-1",
       client_name: "Private User",
-      before_image_url: "/before.jpg",
-      after_image_url: "/after.jpg",
+      before_image_url: "/images/transform-before.jpg",
+      after_image_url: "/images/transform-after.jpg",
       result_summary: "Progress report",
       has_client_consent: false,
       is_published: true,
@@ -179,8 +179,8 @@ test("CMS Privacy & Consent Gates", async (t) => {
     saveTransformation({
       id: "consented-test-1",
       client_name: "Approved Client",
-      before_image_url: "/before.jpg",
-      after_image_url: "/after.jpg",
+      before_image_url: "/images/transform-before.jpg",
+      after_image_url: "/images/transform-after.jpg",
       result_summary: "Approved result",
       has_client_consent: true,
       is_published: true,
@@ -312,6 +312,10 @@ test("Media Library Store Operations (Test F Verification)", async (t) => {
   });
 
   // Teardown: Restore clean canonical CMS data so tests do not leave dirty state
-  updateHeroData(INITIAL_CMS_DATA.hero);
-  publishAllChanges("Test Teardown");
+  try {
+    if (fs.existsSync(".cms-store.json")) {
+      fs.unlinkSync(".cms-store.json");
+    }
+  } catch {}
+  resetMemoryStoreForTesting();
 });

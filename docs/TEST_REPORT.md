@@ -139,3 +139,13 @@ All captured screenshots are archived in [`docs/screenshots/`](file:///d:/mannu-
    - Public endpoint `/api/cms/published` immediately updated with new published content and created immutable version snapshot.
    - Clean restoration to canonical `"TRAIN SMARTER. GET STRONGER."` headline executed and re-published.
    - Status: **PASSED (100%)**
+
+4. **Zero Network 404/500 Asset Failures**:
+   - Monitored all network responses across desktop and mobile viewports in headless Chrome.
+   - Verified that all images (`mansoor-hero-poster.jpg`, `mansoor-portrait.jpg`, program cards, competition photos), CSS bundles, and videos (`mansoor-hero.mp4`, `mansoor-hero-mobile.mp4`) return HTTP 200 / HTTP 206 without any 404 errors.
+   - Status: **PASSED (100%)**
+
+5. **Mobile Viewport Real Pointer Interaction & CSS Compilation**:
+   - Resolved Node 24 Windows Tailwind CSS compilation by generating pure CSS utility styles (`src/app/tailwind.css`) and importing directly in `src/app/layout.tsx`.
+   - Verified real pointer interaction (`page.click('button[aria-label="Toggle Navigation Menu"]')`) at 390x844 mobile viewport, confirming that the hamburger button is fully styled, clickable, and reliably opens the navigation drawer.
+   - Status: **PASSED (100%)**
